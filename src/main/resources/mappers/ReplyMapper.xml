@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="camp.mok.repository.ReplyRepository">
+  
+    <insert id="insert">
+    	insert into tbl_reply (rno, bno, reply, replier, replierNickName)
+    	values (seq_reply.nextval, #{bno}, #{reply}, #{replier}, #{replierNickName})
+    </insert>
+    
+    <select id="read" resultType="replyVO">
+    	select * from tbl_reply where rno=#{rno}
+    </select>
+    
+    <delete id="delete">
+    	delete from tbl_reply where rno=#{rno}
+    </delete>
+    
+    <update id="update">
+    	update tbl_reply set
+    		reply=#{reply},
+    		updateDate=sysdate
+    		where rno=#{rno}
+    </update>
+
+	<select id = "getReplyCount" resultType="int">
+		select count(rno) from tbl_reply where bno = #{bno}	
+	</select>
+    
+    <select id="getList" resultType="replyVO">
+    <![CDATA[
+    select * from
+    (
+    	select /*+index(tbl_reply pk_reply) */
+    		rownum rn, bno, rno, reply, replier,replierNickName, replyDate, updateDate
+		from tbl_reply R
+		where R.bno = #{bno}
+		and rownum <= #{criteria.maxRow}
+	)
+	where rn > #{criteria.minRow}
+	
+   	]]>
+    </select>
+    
+    <delete id="deleteAll">
+    	delete from tbl_reply where bno=#{bno}
+    </delete>
+    
+</mapper>

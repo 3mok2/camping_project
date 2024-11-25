@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="camp.mok.repository.DeckRepository">
+  
+    <select id="getList" resultType="DeckVO">
+    	select * from tbl_deck where dno > 0
+    </select>
+    
+    <insert id="insert">
+    	<selectKey keyProperty="dno" order="BEFORE" resultType="long">
+			select seq_deck.nextval from dual
+		</selectKey>
+    	insert into tbl_deck (dno, deckName) values (#{dno}, #{deckName}) 
+    </insert>
+    
+    <update id="update">
+    	update tbl_deck set
+    	deckName=#{deckName}
+    	where dno = #{dno}
+    </update>
+    
+    <delete id="delete">
+		delete tbl_deck where dno = #{dno}
+	</delete>
+	
+	<select id="readDeck" resultType="DeckVO">
+		select * from tbl_deck where dno = #{dno}
+	</select>
+    
+</mapper>
